@@ -9,13 +9,15 @@ export const Container = styled.div`
   border: 1px solid #ccc;
   border-radius: 48px;
   box-sizing: border-box;
+  user-select: none;
 `;
 
 export const StyledInput = styled.input`
   width: 100%;
-	height: 36px;
+	height: 16px;
 	font-size: 16px;
   padding: 10px;
   border: none;
   outline: none;
+  user-select: none;
 `;

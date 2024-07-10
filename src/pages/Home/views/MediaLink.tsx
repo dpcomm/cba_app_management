@@ -2,14 +2,15 @@ import React, { useState } from 'react';
 import { Container } from './View.styled';
 import BackTextInput from '@components/BackTextinput';
 
-const MealList = () => {
+const MediaLink = () => {
   const [search, set_search] = useState("");
 
   return (
     <Container>
       <BackTextInput placeHolder={'Search...'} getter={search} setter={set_search} />
+      유튜브 실황 링크
     </Container>
   );
 };
 
-export default MealList;
+export default MediaLink;

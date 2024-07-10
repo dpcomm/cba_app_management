@@ -5,12 +5,10 @@ import { Title3, Title6, body1, body2, body3, body4, body6 } from "@styles/font"
 export const Container = styled.div`
 	display: flex;
 	flex-direction: column;
-	width: 100%;
-	height: 100dvh;
 	justify-content: center;
 	align-items: center;
-	padding-right: 42px;
-	padding-left: 42px;
+	width: 100%;
+	height: 100dvh;
 `;
 
 export const LogoView = styled.div`
@@ -37,8 +35,14 @@ export const LogoBold = styled.div`
 	user-select: none;
 `;
 
+export const LogoSub = styled.div`
+	${Title3}
+	color: ${EColor.TEXT_500};
+	user-select: none;
+`;
+
 export const LoginInputView = styled.div`
-	width: 100%;
+	width: 342px;
 	margin-top: 24px;
 `;
 
@@ -53,8 +57,10 @@ export const TextButton = styled.div`
 	margin: 8px;
 	${body3};
 	color: ${EColor.TEXT_600};
+	text-align: center;
 	justify-content: center;
 	align-items: center;
+	user-select: none;
 `;
 
 export const NameText = styled.div`

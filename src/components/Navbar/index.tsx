@@ -8,17 +8,9 @@ import { useEffect } from 'react';
 import { LeftView } from '@components/HeaderBar/HeaderBar.styled';
 
 /* 페이지 라우팅 시 해당 부분 수정 필요. */
-const noneHeaderTarget = ['', 'home', 'not-login'];
+const noneHeaderTarget = ['', 'home'];
 const pageLabel = {
   [Page.home]: '홈',
-  [Page.register]: '회원가입',
-  [Page.retreatInfo]: '수련회 안내',
-  [Page.retreatLocation]: '수련회 위치',
-  [Page.retreatPayment]: '수련회 납부',
-  [Page.retreatApplication]: '수련회 신청',
-  [Page.retreatAppInfo]: "수련회 신청서 조회 & 수정",
-  [Page.editProfile]: "내 정보 관리",
-  [Page.myPage]: "마이페이지",
 };
 
 const Navbar = () => {

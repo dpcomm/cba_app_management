@@ -1,107 +1,74 @@
-import React from 'react';
-import { ButtonView, Container, DDayTest, DDayView, ItemText, ItemView, Line, LogoBold, LogoLight, LogoView, MenuView, NameText, TextLight } from './HomeView.styled';
-import { EColor } from '@styles/color';
+import React, { useState } from 'react';
+import AllUser from './views/AllUser';
+import ApplicationStatus from './views/ApplicationStatus';
+import MealList from './views/MealList';
+import MediaLink from './views/MediaLink';
 import SvgIcon from '@components/SvgIcon';
-import { IconButton } from '@components/IconButton';
-import usePageControll from '@hooks/usePageControll';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { isLoadingState, userState } from '@modules/atoms';
-import { useState,useEffect } from 'react';
-import useConfirm from '@hooks/useConfirm';
-import { requestLogout } from '@apis/index';
+import BackItemButton from '@components/BackItemButton';
+import { BackItemButtonContainer, Container, SideBar, TopView } from './HomeView.styled';
+import IconButton from '@components/Button';
+import { EColor } from '@styles/color';
 
-const HomeView = () => {
-  const { handlePage } = usePageControll();
-  const setIsLoading = useSetRecoilState(isLoadingState);
 
-  const user = useRecoilValue(userState);
-  const [dDay, setDDay] = useState(null);
+const BackofficeView = () => {
+  const [page, set_page] = useState(0);
 
-  const calculateDDay = (targetDate) => {
-    const today = new Date();
-    const target = new Date(targetDate);
-    const difference = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
-    return difference;
+  const handleLogout = () => {
+    console.log("로그아웃 되었습니다.");
   };
 
-  useEffect(() => {
-    const targetDate = '2024-08-23'; // Set your target date here
-    setDDay(calculateDDay(targetDate));
-  }, [user.userId]);
-
-  const handleLogout = useConfirm("로그아웃 하시겠습니까? ", async () => {
-    setIsLoading({ isLoading: true });
-    await localStorage.removeItem('access_token');
-    await localStorage.removeItem('refresh_token');
-    requestLogout(user.id).then(() => {
-      window.location.href = '';
-      alert("로그아웃이 완료되었습니다.");
-      setIsLoading({ isLoading: false });
-    }).catch((err) => {
-      console.log(err);
-      alert("로그아웃에 실패하였습니다.");
-      setIsLoading({ isLoading: false });
-    });
-  }, () => null);
-
-	return (
+  return (
     <Container>
-      <LogoView>
-				<LogoLight>Welcome to</LogoLight>
-				<LogoBold>CBA</LogoBold>
-			</LogoView>
-      <NameText>{user.name}님 안녕하세요.</NameText>
-      <DDayView>
-        <SvgIcon name={'calendar'} width={36} height={36} fill={"none"} stroke={EColor.TEXT_800} />
-        <DDayTest>D-{dDay}</DDayTest>
-      </DDayView>
-      <MenuView>
-        <ItemView onClick={() => handlePage('retreat-info')}>
-          <SvgIcon name={'info'} width={36} height={36} fill={"none"} stroke={EColor.TEXT_800} />
-          <ItemText>수련회 안내</ItemText>
-        </ItemView>
-        <Line />
-        <ItemView onClick={() => alert("서비스 준비중입니다.")}>
-          <SvgIcon name={'youtube'} width={36} height={36} fill={EColor.TEXT_800} stroke={"none"} />
-          <ItemText>유튜브 실황</ItemText>
-        </ItemView>
-        <Line />
-        <ItemView onClick={() => handlePage('retreat-payment')}>
-          <SvgIcon name={'bill'} width={36} height={36} fill={EColor.TEXT_800} stroke={EColor.TEXT_800} />
-          <ItemText>납부 확인</ItemText>
-        </ItemView>
-      </MenuView>
-      <MenuView>
-        <ItemView onClick={() => alert("서비스 준비중입니다.")}>
-          <SvgIcon name={'clock'} width={36} height={36} fill={EColor.TEXT_800} stroke={'none'} />
-          <ItemText>수련회 일정표</ItemText>
-        </ItemView>
-        <Line />
-        <ItemView onClick={() => handlePage('retreat-location')}>
-          <SvgIcon name={'location'} width={36} height={36} fill={"none"} stroke={EColor.TEXT_800} />
-          <ItemText>수련회 위치</ItemText>
-        </ItemView>
-        <Line />
-        <ItemView onClick={() => handlePage('my-page')}>
-          <SvgIcon name={'user'} width={40} height={40} fill={"none"} stroke={EColor.TEXT_800} />
-          <ItemText>마이 페이지</ItemText>
-        </ItemView>
-      </MenuView>
-      <TextLight>[수련회 신청] - 수련회 안내 페이지를 확인해주세요.</TextLight>
-      <ButtonView>
+      <SideBar>
+        <TopView>
+          <SvgIcon name={'cba_logo'} width={150} height={150} fill={'none'} />
+          <BackItemButtonContainer>
+            <BackItemButton
+              label="전체 계정 정보"
+              onClick={() => set_page(0)}
+              isClicked={page === 0}
+            >
+              <SvgIcon name={'graph'} width={18} height={18} fill={'none'} />
+            </BackItemButton>
+            <BackItemButton
+              label="수련회 등록 현황"
+              onClick={() => set_page(1)}
+              isClicked={page === 1}
+            >
+              <SvgIcon name={'document'} width={20} height={20} fill={'none'} stroke={EColor.TEXT_600} />
+            </BackItemButton>
+            <BackItemButton
+              label="식수 파악"
+              onClick={() => set_page(2)}
+              isClicked={page === 2}
+            >
+              <SvgIcon name={'meal'} width={18} height={18} fill={'none'} />
+            </BackItemButton>
+            <BackItemButton
+              label="유튜브 실황 링크"
+              onClick={() => set_page(3)}
+              isClicked={page === 3}
+            >
+              <SvgIcon name={'youtube'} width={17} height={16} fill={EColor.TEXT_600} stroke={EColor.TEXT_600} />
+            </BackItemButton>
+          </BackItemButtonContainer>
+        </TopView>
         <IconButton
           label={'로그아웃'}
-          width={"108px"}
-          height={"34px"}
-          borderRadius='12px'
-          backgroundColor={EColor.TEXT_500}
-          tintColor='white'
-          color='white'
           onClick={handleLogout}
+          svg={<SvgIcon name={'logout'} width={20} height={20} fill={EColor.TEXT_500} />}
+          backgroundColor={EColor.TEXT_200}
+          borderWidth='0'
+          color={EColor.TEXT_700}
+          width='100%'
         />
-      </ButtonView>
+      </SideBar>
+      {page === 0 && <AllUser />}
+      {page === 1 && <ApplicationStatus />}
+      {page === 2 && <MealList />}
+      {page === 3 && <MediaLink />}
     </Container>
   );
 };
 
-export default HomeView;
+export default BackofficeView;

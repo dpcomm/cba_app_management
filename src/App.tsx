@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from '@pages/Login';
-import { Page } from './types';
 import Home from '@pages/Home';
+import { Page } from './types';
 import Error404 from '@pages/Error404';
 import Maintenance from '@pages/Maintenance';
 import PrivateRoute from '@utils/PrivateRoute';
@@ -38,7 +38,7 @@ const App = () => {
 				birth: res.data.user.birth,
 				gender: res.data.user.gender,
 			});
-			if (window.location.pathname == '/') window.location.href = '/home';
+			if (window.location.pathname == '/management') window.location.href = '/management/home';
 		}).catch(async (err) => {
 			setUser({
 				id: null,

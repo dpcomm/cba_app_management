@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CheckBox, Container, LoginInputView, LogoBold, LogoLight, LogoView, TextButton, TextButtonView } from './LoginView.styled';
+import { CheckBox, Container, LoginInputView, LogoBold, LogoLight, LogoSub, LogoView, TextButton, TextButtonView } from './LoginView.styled';
 import TextInput from '@components/TextInput';
 import SvgIcon from '@components/SvgIcon';
 import { EColor } from '@styles/color';
@@ -20,7 +20,7 @@ const LoginView = () => {
 	const setIsLoading = useSetRecoilState(isLoadingState);
 
 	useEffect(() => {
-		user.userId && handlePage("home");
+		user.userId && handlePage("management/home");
 	}, []);
 
 	const handleCheckBox = () => {
@@ -47,7 +47,7 @@ const LoginView = () => {
 			if (autoLogin) {
 				await localStorage.setItem('refresh_token', res.data.refreshToken);
 			}
-			handlePage('home');
+			handlePage('management/home');
 			alert("로그인에 성공하였습니다.");
 			setIsLoading({ isLoading: false });
 		}).catch((err) => {
@@ -63,6 +63,7 @@ const LoginView = () => {
 			<LogoView>
 				<LogoLight>Welcome to</LogoLight>
 				<LogoBold>CBA</LogoBold>
+				<LogoSub>Management Console</LogoSub>
 			</LogoView>
 			<LoginInputView>
 				<TextInput
@@ -89,7 +90,6 @@ const LoginView = () => {
 					color='black'
 					onClick={() => handleLogin()}
 				/>
-			</LoginInputView>
 				<CheckBox onClick={handleCheckBox}>
 					<SvgIcon
 						name={'check'}
@@ -99,9 +99,15 @@ const LoginView = () => {
 					/>
 					로그인 유지
 				</CheckBox>
+			</LoginInputView>
 			<TextButtonView>
-				<TextButton onClick={() => alert("서비스 준비중입니다.")}>아이디/비밀번호 찾기</TextButton>
-				<TextButton onClick={() => handlePage("register")}>회원가입</TextButton>
+				<TextButton>
+					이 페이지는 CBA Connect의 관리 페이지로
+					<br />
+					관리 권한이 있는 사용자만 접근할 수 있습니다.
+					<br />
+					권한이 없는 경우, 접근이 제한되오니 관리자에게 문의하시기 바랍니다.
+				</TextButton>
 			</TextButtonView>
 		</Container>
   );

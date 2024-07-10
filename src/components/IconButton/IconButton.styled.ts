@@ -28,6 +28,7 @@ export const StyledIconButton = styled.button<StyledIconButtonProps>`
   width: ${({width}) => width ?? 'fit-content'};
   height: ${({height}) => height ?? '50px'};
   ${Title5}
+  user-select: none;
 `;
 
 export const Content = styled.div`
@@ -36,6 +37,7 @@ export const Content = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
+  user-select: none;
 `;
 
 export const SvgItem = styled.div`

@@ -24,7 +24,7 @@ const MaintenanceView = () => {
           <IconButton
             label={'돌아가기'}
             height='32px'
-            onClick={() => handlePage('')}
+            onClick={() => handlePage('management/login')}
             color={EColor.TEXT_200}
             backgroundColor={EColor.COLOR_PRIMARY_SUB1}
             borderRadius='8px'

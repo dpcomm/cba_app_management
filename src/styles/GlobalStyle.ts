@@ -9,19 +9,7 @@ import { body6 } from "./font";
 
 export const GlobalStyle = createGlobalStyle`
   * {
-    overscroll-behavior-y: none;
-    box-sizing: border-box;
     margin: 0;
-  }
-  html {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  @media (max-width: 768px) {
-    html {
-      display: block;
-    }
   }
   @font-face {
     font-family: 'NotoSansBlack';
