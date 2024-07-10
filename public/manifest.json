@@ -33,7 +33,7 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": ".",
+  "start_url": "management",
   "display": "standalone",
   "theme_color": "#F16622",
   "background_color": "#ffffff"
