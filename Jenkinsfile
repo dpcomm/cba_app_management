@@ -20,13 +20,13 @@ pipeline {
         }
         stage('Wipe') {
             steps {
-                sh "sudo docker exec cba_ws rm -rf /usr/share/nginx/management"
+                sh "sudo docker exec cba_ws rm -rf /usr/share/nginx/html/management"
             }
         }
         stage('Copy') {
             steps {
                 sh "sudo docker exec cba_ws mkdir -p /usr/share/nginx/management"
-                sh "sudo docker cp /var/lib/jenkins/workspace/cba_connect_management/dist/. cba_ws:/usr/share/nginx/management"
+                sh "sudo docker cp /var/lib/jenkins/workspace/cba_connect_management/dist/. cba_ws:/usr/share/nginx/html/management"
             }
         }
         stage('Reload') {

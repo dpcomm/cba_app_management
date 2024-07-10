@@ -61,7 +61,7 @@ const App = () => {
     <BrowserRouter basename='/management'>
 			{isLoading[0].isLoading && <Spinner />}
       <Routes>
-        <Route path={`/${Page.login}`} element={<Login />} />
+        <Route path="/" element={<Login />} />
 				<Route path={`/${Page.notLogin}`} element={<NotLogin />} />
         <Route path={`/${Page.maintenance}`} element={<Maintenance />} />
         <Route element={<PrivateRoute />}>

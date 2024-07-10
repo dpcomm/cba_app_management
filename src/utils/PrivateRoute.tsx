@@ -4,7 +4,7 @@ import { useRecoilState } from "recoil";
 
 const PrivateRoute = () => {
   const isLogin = useRecoilState(userState);
-  return isLogin[0].userId ? <Outlet /> : <Navigate to="/management/not-login" />;
+  return isLogin[0].userId ? <Outlet /> : <Navigate to="/not-login" />;
 };
 
 export default PrivateRoute;

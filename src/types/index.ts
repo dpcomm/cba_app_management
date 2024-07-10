@@ -13,7 +13,6 @@ export type NavInfo = {
 };
 
 export enum Page {
-  login = "login",
   home = "home",
   maintenance = "maintenance",
   notLogin = "not-login",
