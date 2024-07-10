@@ -24,36 +24,36 @@ const App = () => {
 		const accessToken = await localStorage.getItem('access_token');
 		const refreshToken = await localStorage.getItem('refresh_token');
 
-		requestAuthCheck(accessToken, refreshToken)
-		.then((res) => {
-			if (!res.data.user) return;
-			setUser({
-				id: res.data.user.id,
-				userId: res.data.user.userId,
-				rank: res.data.user.rank,
-				password: res.data.user.password,
-				name: res.data.user.name,
-				group: res.data.user.group,
-				phone: res.data.user.phone,
-				birth: res.data.user.birth,
-				gender: res.data.user.gender,
-			});
-			if (window.location.pathname == '/management/login') window.location.href = '/management/home';
-		}).catch(async (err) => {
-			setUser({
-				id: null,
-				userId: "",
-				rank: "M",
-				password: "",
-				name: "",
-				group: "",
-				phone: "",
-				birth: "",
-				gender: "",
-			});
-			if (!err.response || !err.response.data) return console.log("An unexpected error occurred:", err);
-			if (err.response.data.message === "Token not exist") return;
-			if (err.response.data.message === "Unauthorized user") return alert("로그인이 필요합니다.");
+		// requestAuthCheck(accessToken, refreshToken)
+		// .then((res) => {
+		// 	if (!res.data.user) return;
+		// 	setUser({
+		// 		id: res.data.user.id,
+		// 		userId: res.data.user.userId,
+		// 		rank: res.data.user.rank,
+		// 		password: res.data.user.password,
+		// 		name: res.data.user.name,
+		// 		group: res.data.user.group,
+		// 		phone: res.data.user.phone,
+		// 		birth: res.data.user.birth,
+		// 		gender: res.data.user.gender,
+		// 	});
+		// 	if (window.location.pathname == '/management/login') window.location.href = '/management/home';
+		// }).catch(async (err) => {
+		// 	setUser({
+		// 		id: null,
+		// 		userId: "",
+		// 		rank: "M",
+		// 		password: "",
+		// 		name: "",
+		// 		group: "",
+		// 		phone: "",
+		// 		birth: "",
+		// 		gender: "",
+		// 	});
+		// 	if (!err.response || !err.response.data) return console.log("An unexpected error occurred:", err);
+		// 	if (err.response.data.message === "Token not exist") return;
+		// 	if (err.response.data.message === "Unauthorized user") return alert("로그인이 필요합니다.");
 		});
 	};
 
