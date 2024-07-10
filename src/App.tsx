@@ -54,7 +54,7 @@ const App = () => {
 		// 	if (!err.response || !err.response.data) return console.log("An unexpected error occurred:", err);
 		// 	if (err.response.data.message === "Token not exist") return;
 		// 	if (err.response.data.message === "Unauthorized user") return alert("로그인이 필요합니다.");
-		});
+		// });
 	};
 
   return (
