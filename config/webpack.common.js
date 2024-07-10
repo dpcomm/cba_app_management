@@ -4,6 +4,7 @@ const webpack = require('webpack');
 const dotenv = require('dotenv');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
 const {GenerateSW} = require('workbox-webpack-plugin');
+const loader = require('sass-loader');
 
 dotenv.config();
 
@@ -18,15 +19,40 @@ module.exports = {
       },
       {
         test: /\.svg$/,
-        use: ['@svgr/webpack', 'file-loader'],
+        use: [
+          '@svgr/webpack',
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'media/',
+              name: '[name].[ext]',
+            },
+          },
+        ],
       },
       {
         test: /\.(png|jpg|gif)$/,
-        use: ['file-loader'],
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'media/',
+              name: '[name].[ext]',
+            },
+          }
+        ],
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/i,
-        use: ['file-loader'],
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'fonts/',
+              name: '[name].[ext]',
+            },
+          }
+        ],
       },
     ],
   },
@@ -44,9 +70,9 @@ module.exports = {
       'process.env': JSON.stringify(process.env),
     }),
     new WebpackPwaManifest({
-      name: 'RE:CBA',
-      short_name: 'RE:CBA',
-      description: 'CBA 대학청년부를 위한 웹앱입니다.',
+      name: 'CBA Connect',
+      short_name: 'CBA Connect',
+      description: 'CBA Connect',
       background_color: '#ffffff',
       crossOrigin: 'use-credentials',
       theme_color: '#F16622',
