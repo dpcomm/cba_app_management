@@ -21,7 +21,7 @@ request.interceptors.response.use(
   async (error) => {
     const errorStatus = [500, 501, 502, 503];
     if (errorStatus.includes(error.response.status)) {
-      window.location.href = '/maintenance';
+      window.location.href = '/management/maintenance';
     }
     if (error.response.data.message === 'jwt expired') {
       try {
@@ -30,7 +30,7 @@ request.interceptors.response.use(
         if (!beforeRefreshToken) {
           await localStorage.removeItem('access_token');
           alert('로그인이 만료되었습니다. 다시 로그인 해주세요.');
-          window.location.href = '/login';
+          window.location.href = '/management/login';
           return;
         }
         const data = await requestRefresh(beforeAccessToken, beforeRefreshToken);
@@ -45,7 +45,7 @@ request.interceptors.response.use(
         await localStorage.removeItem('access_token');
         await localStorage.removeItem('refresh_token');
         alert('자동 로그인이 만료되었습니다. 다시 로그인 해주세요.');
-        window.location.href = '/login';
+        window.location.href = '/management/login';
       }
       return Promise.reject(error);
     }

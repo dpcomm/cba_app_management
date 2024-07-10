@@ -38,7 +38,7 @@ const App = () => {
 				birth: res.data.user.birth,
 				gender: res.data.user.gender,
 			});
-			if (window.location.pathname == '/management') window.location.href = '/management/home';
+			if (window.location.pathname == '/management/login') window.location.href = '/management/home';
 		}).catch(async (err) => {
 			setUser({
 				id: null,
@@ -67,7 +67,7 @@ const App = () => {
         <Route element={<PrivateRoute />}>
           <Route path={`/${Page.home}`} element={<Home />} />
         </Route>
-        <Route path="/management/*" element={<Error404 />} />
+        <Route path="/*" element={<Error404 />} />
       </Routes>
     </BrowserRouter>
   );

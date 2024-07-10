@@ -13,10 +13,10 @@ export type NavInfo = {
 };
 
 export enum Page {
-  login = "management/login",
-  home = "management/home",
-  maintenance = "management/maintenance",
-  notLogin = "management/not-login",
+  login = "login",
+  home = "home",
+  maintenance = "maintenance",
+  notLogin = "not-login",
 }
 
 export type RadioItem = {
