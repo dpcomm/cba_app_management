@@ -1,10 +1,9 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 const path = require('path');
 const webpack = require('webpack');
 const dotenv = require('dotenv');
-const WebpackPwaManifest = require('webpack-pwa-manifest');
-const {GenerateSW} = require('workbox-webpack-plugin');
-const loader = require('sass-loader');
+const { GenerateSW } = require('workbox-webpack-plugin');
 
 dotenv.config();
 
@@ -60,6 +59,10 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'public/index.html',
     }),
+    new FaviconsWebpackPlugin({
+      logo: 'public/logo512.png',
+      manifest: 'public/manifest.json',
+    }),
     new webpack.ProvidePlugin({
       React: 'react',
     }),
@@ -68,21 +71,6 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       'process.env': JSON.stringify(process.env),
-    }),
-    new WebpackPwaManifest({
-      name: 'CBA Connect',
-      short_name: 'CBA Connect',
-      description: 'CBA Connect',
-      background_color: '#ffffff',
-      crossOrigin: 'use-credentials',
-      theme_color: '#F16622',
-      icons: [
-        {
-          src: path.resolve('src/assets/images/logo512.png'),
-          sizes: [96, 128, 192, 256, 384, 512],
-        },
-      ],
-      maximumFileSizeToCacheInBytes: 15 * 1024 * 1024,
     }),
     new GenerateSW({
       include: [/\.html$/, /\.js$/],
