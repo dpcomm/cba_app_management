@@ -20,7 +20,7 @@ const LoginView = () => {
 	const setIsLoading = useSetRecoilState(isLoadingState);
 
 	useEffect(() => {
-		user.userId && handlePage("management/home");
+		user.userId && handlePage("home");
 	}, []);
 
 	const handleCheckBox = () => {
@@ -47,7 +47,7 @@ const LoginView = () => {
 			if (autoLogin) {
 				await localStorage.setItem('refresh_token', res.data.refreshToken);
 			}
-			handlePage('management/home');
+			handlePage('home');
 			alert("로그인에 성공하였습니다.");
 			setIsLoading({ isLoading: false });
 		}).catch((err) => {
