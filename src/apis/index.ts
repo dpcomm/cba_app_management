@@ -37,7 +37,6 @@ export const requestRegister =
   });
 };
 
-
 export const updateUserInfo = (
   userId: string,
   name: string,
@@ -91,4 +90,11 @@ export const requestApplication = (
     bus,
     carId
   });
+};
+
+export const requestUser = (userId?: string | null) => {
+  if (userId) {
+    return request.get(`/api/user/${userId}`);
+  }
+  return request.get(`/api/user`);
 };

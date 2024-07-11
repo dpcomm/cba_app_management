@@ -8,15 +8,35 @@ import BackItemButton from '@components/BackItemButton';
 import { BackItemButtonContainer, Container, SideBar, TopView } from './HomeView.styled';
 import IconButton from '@components/Button';
 import { EColor } from '@styles/color';
+import useConfirm from '@hooks/useConfirm';
+import usePageControll from '@hooks/usePageControll';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { isLoadingState, userState } from '@modules/atoms';
+import { requestLogout } from '@apis/index';
 
 
 const BackofficeView = () => {
+  const { handlePage } = usePageControll();
+  const setIsLoading = useSetRecoilState(isLoadingState);
+
+  const user = useRecoilValue(userState);
+
   const [page, set_page] = useState(0);
 
-  const handleLogout = () => {
-    console.log("로그아웃 되었습니다.");
-  };
-
+  const handleLogout = useConfirm("로그아웃 하시겠습니까? ", async () => {
+    setIsLoading({ isLoading: true });
+    await localStorage.removeItem('access_token');
+    await localStorage.removeItem('refresh_token');
+    requestLogout(user.id).then(() => {
+      window.location.href = 'management/login';
+      alert("로그아웃이 완료되었습니다.");
+      setIsLoading({ isLoading: false });
+    }).catch((err) => {
+      console.log(err);
+      alert("로그아웃에 실패하였습니다.");
+      setIsLoading({ isLoading: false });
+    });
+  }, () => null);
   return (
     <Container>
       <SideBar>

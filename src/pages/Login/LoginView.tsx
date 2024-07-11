@@ -32,6 +32,10 @@ const LoginView = () => {
 		setIsLoading({ isLoading: true });
 		requestLogin(id, password, autoLogin)
 		.then(async (res) => {
+			if (res.data.user.rank === "M") {
+				setIsLoading({ isLoading: false });
+				return alert("접근 권한이 없습니다. 관리자에게 문의하시기 바랍니다.");
+			}
 			setUser({
 				id: res.data.user.id,
 				userId: res.data.user.userId,

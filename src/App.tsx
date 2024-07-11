@@ -27,6 +27,10 @@ const App = () => {
 		requestAuthCheck(accessToken, refreshToken)
 		.then((res) => {
 			if (!res.data.user) return;
+			if (res.data.user.rank === "M") {
+				alert("본 페이지는 관리자 권한이 필요한 페이지입니다.");
+				return window.location.href = 'https://recba.me';
+			}
 			setUser({
 				id: res.data.user.id,
 				userId: res.data.user.userId,
