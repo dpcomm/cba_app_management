@@ -5,157 +5,10 @@ import { createColumnHelper, flexRender, getCoreRowModel, getPaginationRowModel,
 import { User } from '@type/states';
 import { requestUser } from '@apis/index';
 
-
-// const dummy: User[] = [
-//   {
-//     id: 1,
-//     userId: 'courtneyscott',
-//     rank: 'Private',
-//     password: '6j(40Vsz(l',
-//     name: 'Paige Adams',
-//     group: 'Charlie',
-//     phone: '(540)358-3304x197',
-//     birth: '1927-05-24',
-//     gender: 'Other'
-//   },
-//   {
-//     id: 2,
-//     userId: 'duane86',
-//     rank: 'Sergeant',
-//     password: '+iDitVzqS7',
-//     name: 'David Kennedy',
-//     group: 'Delta',
-//     phone: '847-158-4943',
-//     birth: '2002-06-11',
-//     gender: 'Other'
-//   },
-//   {
-//     id: 3,
-//     userId: 'justin10',
-//     rank: 'Captain',
-//     password: '$0Lf6kkMgZ',
-//     name: 'Jacqueline Fitzgerald',
-//     group: 'Alpha',
-//     phone: '700.490.6267',
-//     birth: '1945-12-19',
-//     gender: 'Other'
-//   },
-//   {
-//     id: 4,
-//     userId: 'daniel49',
-//     rank: 'Captain',
-//     password: 'D*n7Irqx5H',
-//     name: 'Miguel Sandoval',
-//     group: 'Echo',
-//     phone: '(761)532-1549x63406',
-//     birth: '1921-04-28',
-//     gender: 'Other'
-//   },
-//   {
-//     id: 5,
-//     userId: 'zachary88',
-//     rank: 'Captain',
-//     password: '#2GoV)Epxc',
-//     name: 'Christina Willis',
-//     group: 'Bravo',
-//     phone: '+1-338-781-8895x74240',
-//     birth: '2001-01-24',
-//     gender: 'Male'
-//   },
-//   {
-//     id: 5,
-//     userId: 'zachary88',
-//     rank: 'Captain',
-//     password: '#2GoV)Epxc',
-//     name: 'Christina Willis',
-//     group: 'Bravo',
-//     phone: '+1-338-781-8895x74240',
-//     birth: '2001-01-24',
-//     gender: 'Male'
-//   },
-//   {
-//     id: 5,
-//     userId: 'zachary88',
-//     rank: 'Captain',
-//     password: '#2GoV)Epxc',
-//     name: 'Christina Willis',
-//     group: 'Bravo',
-//     phone: '+1-338-781-8895x74240',
-//     birth: '2001-01-24',
-//     gender: 'Male'
-//   },
-//   {
-//     id: 5,
-//     userId: 'zachary88',
-//     rank: 'Captain',
-//     password: '#2GoV)Epxc',
-//     name: 'Christina Willis',
-//     group: 'Bravo',
-//     phone: '+1-338-781-8895x74240',
-//     birth: '2001-01-24',
-//     gender: 'Male'
-//   },
-//   {
-//     id: 5,
-//     userId: 'zachary88',
-//     rank: 'Captain',
-//     password: '#2GoV)Epxc',
-//     name: 'Christina Willis',
-//     group: 'Bravo',
-//     phone: '+1-338-781-8895x74240',
-//     birth: '2001-01-24',
-//     gender: 'Male'
-//   },
-//   {
-//     id: 5,
-//     userId: 'zachary88',
-//     rank: 'Captain',
-//     password: '#2GoV)Epxc',
-//     name: 'Christina Willis',
-//     group: 'Bravo',
-//     phone: '+1-338-781-8895x74240',
-//     birth: '2001-01-24',
-//     gender: 'Male'
-//   },
-//   {
-//     id: 5,
-//     userId: 'zachary88',
-//     rank: 'Captain',
-//     password: '#2GoV)Epxc',
-//     name: 'Christina Willis',
-//     group: 'Bravo',
-//     phone: '+1-338-781-8895x74240',
-//     birth: '2001-01-24',
-//     gender: 'Male'
-//   },
-//   {
-//     id: 5,
-//     userId: 'zachary88',
-//     rank: 'Captain',
-//     password: '#2GoV)Epxc',
-//     name: 'Christina Willis',
-//     group: 'Bravo',
-//     phone: '+1-338-781-8895x74240',
-//     birth: '2001-01-24',
-//     gender: 'Male'
-//   },
-//   {
-//     id: 5,
-//     userId: 'zachary88',
-//     rank: 'Captain',
-//     password: '#2GoV)Epxc',
-//     name: 'Christina Willis',
-//     group: 'Bravo',
-//     phone: '+1-338-781-8895x74240',
-//     birth: '2001-01-24',
-//     gender: 'Male'
-//   },
-// ];
-
-
 const AllUser = () => {
   const [search, set_search] = useState("");
   const [data, set_data] = useState<User[]>([]);
+  const [filteredData, set_filteredData] = useState<User[]>([]);
   const [pagination, set_pagination] = useState({
     pageIndex: 0,
     pageSize: 10,
@@ -167,6 +20,19 @@ const AllUser = () => {
       console.log(res.data);
     });
   }, []);
+
+  useEffect(() => {
+    const lowercasedSearch = search.toLowerCase();
+    const filtered = data.filter(user =>
+      user.name.toLowerCase().includes(lowercasedSearch) ||
+      user.userId.toLowerCase().includes(lowercasedSearch) ||
+      user.rank.toLowerCase().includes(lowercasedSearch) ||
+      user.group.toLowerCase().includes(lowercasedSearch) ||
+      user.phone.includes(search)
+    );
+    set_filteredData(filtered);
+  }, [search, data]);
+
 
   const columnHelper = createColumnHelper();
   const columns = [
@@ -187,7 +53,7 @@ const AllUser = () => {
   ];
 
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -196,6 +62,7 @@ const AllUser = () => {
       pagination
     }
   });
+
 
   return (
     <Container>
