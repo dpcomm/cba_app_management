@@ -1,4 +1,5 @@
 import { EColor } from "@styles/color";
+import { body1 } from "@styles/font";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -31,8 +32,21 @@ export const StyledThead = styled.thead`
 `;
 
 export const StyledTbody = styled.tbody`
-  tr:nth-child(even) {
-    background-color: #f2f2f2;
+  tr {
+    transition: background-color 0.3s ease-in-out;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #eaeaea; // 호버 시 배경색 변경
+    }
+
+    &:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    &:nth-child(even):hover {
+      background-color: #eaeaea;
+    }
   }
 
   td {
@@ -98,4 +112,44 @@ export const StyledSelect = styled.select`
     border-color: ${EColor.COLOR_PRIMARY};
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
   }
+`;
+
+
+export const EditPageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 80%;
+  background-color: #fff;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 8px;
+  gap: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+`;
+
+export const EditPageHeader = styled.h2`
+  text-align: center;
+  color: ${EColor.COLOR_PRIMARY};
+  margin-bottom: 20px;
+`;
+
+export const EditPageItemView = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid ${EColor.COLOR_PRIMARY_SUB1};
+  border-radius: 5px;
+  background-color: #f9f9f9;
+`;
+
+export const EditPageLabel = styled.div`
+  ${body1}
+  color: ${EColor.TEXT_600};
+`;
+
+export const EditPageValue = styled.div`
+  ${body1}
+  color: ${EColor.TEXT_700};
 `;

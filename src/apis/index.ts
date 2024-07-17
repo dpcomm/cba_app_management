@@ -72,11 +72,14 @@ export const requestAuthCheck = (accessToken: string | null, refreshToken: strin
   });
 };
 
-export const requestApplicationByUser = (userId: string | null) => {
-  return request.get(`/api/application/${userId}`);
+export const requestApplication = (userId?: string | null) => {
+  if (userId) {
+    return request.get(`/api/application/${userId}`);
+  }
+  return request.get(`/api/application/management`);
 };
 
-export const requestApplication = (
+export const requestApplicationRegister = (
   userId: string | null,
   meal: number[][],
   transfer: string,
@@ -97,4 +100,12 @@ export const requestUser = (userId?: string | null) => {
     return request.get(`/api/user/${userId}`);
   }
   return request.get(`/api/user`);
+};
+
+export const requestApplicationUpdate = (id: number, attended: boolean, feePaid: boolean) => {
+  return request.post('/api/application/management', {
+    id,
+    attended,
+    feePaid
+  });
 };

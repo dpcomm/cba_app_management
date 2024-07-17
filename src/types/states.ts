@@ -28,6 +28,17 @@ export interface Application {
   userId: string | null;
   retreatId: number | null;
 }
+export interface ApplicationStatusType {
+  id: number;
+  attended: boolean;
+  feePaid: boolean;
+  transfer: string;
+  ownCar: string;
+  bus: [number, number];
+  name: string;
+  title: string;
+}
+
 
 export interface IsLoading {
   isLoading: boolean
