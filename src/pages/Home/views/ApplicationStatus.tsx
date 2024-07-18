@@ -116,7 +116,7 @@ const ApplicationState = () => {
           alert("수련회 신청서 수정에 실패하였습니다..");
           setIsLoading({ isLoading: false });
         });
-      }, () => null);
+      }, () => setIsLoading({ isLoading: true }));
       confirmEditApplication();
     } else {
       set_editData(null);
