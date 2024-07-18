@@ -1,5 +1,5 @@
 import { EColor } from "@styles/color";
-import { body1 } from "@styles/font";
+import { Title3,  body1 } from "@styles/font";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -8,6 +8,22 @@ export const Container = styled.div`
   align-items: center;
   flex: 1;
   padding: 18px 24px;
+`;
+
+export const HeaderView = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`;
+
+export const HeaderText = styled.div`
+  width: 144px;
+  justify-content: center;
+  ${Title3}
+  color: ${EColor.TEXT_800};
+  user-select: none;
 `;
 
 export const StyledTable = styled.table`
@@ -132,6 +148,7 @@ export const EditPageHeader = styled.h2`
   text-align: center;
   color: ${EColor.COLOR_PRIMARY};
   margin-bottom: 20px;
+  user-select: none;
 `;
 
 export const EditPageItemView = styled.div`
