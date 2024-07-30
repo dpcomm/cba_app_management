@@ -28,6 +28,15 @@ export interface Application {
   userId: string | null;
   retreatId: number | null;
 }
+
+export interface Youtube {
+  id: number;
+  retreatId: number;
+  title: string;
+  link: string;
+  createdAt: string;
+}
+
 export interface ApplicationStatusType {
   id: number;
   attended: boolean;

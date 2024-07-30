@@ -1,5 +1,5 @@
 import { EColor } from "@styles/color";
-import { Title3,  body1 } from "@styles/font";
+import { Title3,  body1, body2 } from "@styles/font";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -169,4 +169,24 @@ export const EditPageLabel = styled.div`
 export const EditPageValue = styled.div`
   ${body1}
   color: ${EColor.TEXT_700};
+`;
+
+export const TextInput = styled.input`
+  ${body2};
+  width: 256px;
+  height: 32px;
+  padding: 10px;
+  border: 1px solid ${EColor.TEXT_500};
+  border-radius: 4px;
+  color: ${EColor.TEXT_900};
+  background-color: ${EColor.TEXT_200};
+
+  &:focus {
+    border-color: ${EColor.COLOR_PRIMARY};
+    outline: none;
+  }
+
+  &::placeholder {
+    color: ${EColor.TEXT_600};
+  }
 `;
