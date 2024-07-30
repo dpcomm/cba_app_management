@@ -51,7 +51,8 @@ const ApplicationState = () => {
       cell: data => {
         if (data.getValue()[0] === 0 && data.getValue()[1] === 1) return <div>본당→수련회장</div>;
         if (data.getValue()[0] === 1 && data.getValue()[1] === 0) return <div>수련회장→본당</div>;
-        return <div>왕복</div>;
+        if (data.getValue()[0] === 1 && data.getValue()[1] === 1) return <div>왕복</div>;
+        return null;
       }
     }),
     columnHelper.accessor("ownCar", { header: "차량번호" }),
@@ -115,7 +116,7 @@ const ApplicationState = () => {
           alert("수련회 신청서 수정에 실패하였습니다..");
           setIsLoading({ isLoading: false });
         });
-      }, () => null);
+      }, () => setIsLoading({ isLoading: true }));
       confirmEditApplication();
     } else {
       set_editData(null);
