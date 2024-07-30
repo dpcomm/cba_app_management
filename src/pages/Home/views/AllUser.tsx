@@ -1,6 +1,6 @@
 import BackTextInput from '@components/BackTextinput';
 import React, { useEffect, useState } from 'react';
-import { ButtonView, Container, PageNumber, StyledButton, StyledSelect, StyledTable, StyledTbody, StyledThead } from './View.styled';
+import { ButtonView, Container, HeaderText, HeaderView, PageNumber, StyledButton, StyledSelect, StyledTable, StyledTbody, StyledThead } from './View.styled';
 import { createColumnHelper, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
 import { User } from '@type/states';
 import { requestUser } from '@apis/index';
@@ -66,7 +66,11 @@ const AllUser = () => {
 
   return (
     <Container>
-      <BackTextInput placeHolder={'Search...'} getter={search} setter={set_search} />
+      <HeaderView>
+        <HeaderText>전체 계정 정보</HeaderText>
+        <BackTextInput placeHolder={'Search...'} getter={search} setter={set_search} />
+        <HeaderText></HeaderText>
+      </HeaderView>
       <StyledTable>
         <StyledThead>
           {table.getHeaderGroups().map((headerGroup) => (

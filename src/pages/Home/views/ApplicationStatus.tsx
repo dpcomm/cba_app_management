@@ -1,6 +1,6 @@
 import BackTextInput from '@components/BackTextinput';
 import React, { useEffect, useState } from 'react';
-import { ButtonView, Container, EditPageContainer, EditPageHeader, EditPageItemView, EditPageLabel, EditPageValue, PageNumber, StyledButton, StyledSelect, StyledTable, StyledTbody, StyledThead } from './View.styled';
+import { ButtonView, Container, EditPageContainer, EditPageHeader, EditPageItemView, EditPageLabel, EditPageValue, HeaderText, HeaderView, PageNumber, StyledButton, StyledSelect, StyledTable, StyledTbody, StyledThead } from './View.styled';
 import { createColumnHelper, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
 import { requestApplication, requestApplicationUpdate } from '@apis/index';
 import { ApplicationStatusType } from '@type/states';
@@ -126,7 +126,11 @@ const ApplicationState = () => {
 
   return (
     <Container>
-      <BackTextInput placeHolder={'Search...'} getter={search} setter={set_search} />
+      <HeaderView>
+        <HeaderText>수련회 등록 현황</HeaderText>
+        <BackTextInput placeHolder={'Search...'} getter={search} setter={set_search} />
+        <HeaderText></HeaderText>
+      </HeaderView>
       {render ?
           <EditPageContainer>
             <EditPageHeader>수련회 신청서 수정</EditPageHeader>

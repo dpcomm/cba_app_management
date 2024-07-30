@@ -109,3 +109,15 @@ export const requestApplicationUpdate = (id: number, attended: boolean, feePaid:
     feePaid
   });
 };
+
+export const requestYoutube = () => {
+  return request.get('/api/youtube');
+};
+
+export const requestCreateYoutube = (retreatId: number, title: string, link: string) => {
+  return request.post('/api/youtube', {
+    retreatId,
+    title,
+    link
+  });
+};
