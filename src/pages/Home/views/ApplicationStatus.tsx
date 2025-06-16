@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { ButtonView, Container, EditPageContainer, EditPageHeader, EditPageItemView, EditPageLabel, EditPageValue, HeaderText, HeaderView, PageNumber, StyledButton, StyledSelect, StyledTable, StyledTbody, StyledThead } from './View.styled';
 import { createColumnHelper, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
 import { requestApplication, requestApplicationUpdate } from '@apis/index';
-import { ApplicationStatusType } from '@type/states';
+import { ApplicationStatusType,ApplicationCheck } from '@type/states';
 import { IconButton } from '@components/IconButton';
 import { EColor } from '@styles/color';
 import useConfirm from '@hooks/useConfirm';
@@ -16,9 +16,9 @@ const ApplicationState = () => {
 
   const [render, set_render] = useState(0);
   const [search, set_search] = useState("");
-  const [data, set_data] = useState<ApplicationStatusType[]>([]);
-  const [filteredData, set_filteredData] = useState<ApplicationStatusType[]>([]);
-  const [editData, set_editData] = useState<ApplicationStatusType | null>();
+  const [data, set_data] = useState<ApplicationCheck[]>([]);
+  const [filteredData, set_filteredData] = useState<ApplicationCheck[]>([]);
+  const [editData, set_editData] = useState<ApplicationCheck | null>();
   const [edit_attended, set_edit_attended] = useState();
   const [edit_feePaid, set_edit_feePaid] = useState();
   const [pagination, set_pagination] = useState({
@@ -44,18 +44,21 @@ const ApplicationState = () => {
   const columns = [
     columnHelper.accessor("id", { header: "ID" }),
     columnHelper.accessor("name", { header: "이름" }),
+    columnHelper.accessor("group", { header: "소그룹" }),
+    columnHelper.accessor("gender", { header: "성별" }),
+    columnHelper.accessor("isLeader", { header: "리딩자" }),
+    // columnHelper.accessor("transfer", { header: "이동 수단" }),
+    // columnHelper.accessor("bus", {
+      //   header: "버스 탑승 정보",
+      //   cell: data => {
+        //     if (data.getValue()[0] === 0 && data.getValue()[1] === 1) return <div>본당→수련회장</div>;
+        //     if (data.getValue()[0] === 1 && data.getValue()[1] === 0) return <div>수련회장→본당</div>;
+    //     if (data.getValue()[0] === 1 && data.getValue()[1] === 1) return <div>왕복</div>;
+    //     return null;
+    //   }
+    // }),
+    // columnHelper.accessor("ownCar", { header: "차량번호" }),
     columnHelper.accessor("title", { header: "수련회 제목" }),
-    columnHelper.accessor("transfer", { header: "이동 수단" }),
-    columnHelper.accessor("bus", {
-      header: "버스 탑승 정보",
-      cell: data => {
-        if (data.getValue()[0] === 0 && data.getValue()[1] === 1) return <div>본당→수련회장</div>;
-        if (data.getValue()[0] === 1 && data.getValue()[1] === 0) return <div>수련회장→본당</div>;
-        if (data.getValue()[0] === 1 && data.getValue()[1] === 1) return <div>왕복</div>;
-        return null;
-      }
-    }),
-    columnHelper.accessor("ownCar", { header: "차량번호" }),
     columnHelper.accessor("attended", {
       header: "현장 등록 여부",
       cell: data => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "./\bBackItemButton.styled";
+import { Button } from "./BackItemButton.styled";
 
 type BackItemButtonProps = {
     label: string;

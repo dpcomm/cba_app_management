@@ -71,6 +71,14 @@ export const StyledTbody = styled.tbody`
   }
 `;
 
+export const DownloadButtonView = styled.div`
+  display: flex;
+  justify-content: center; /* 버튼을 가로로 중앙 정렬 */
+  align-items: center; /* 버튼을 세로로 중앙 정렬 */
+  margin-top: 20px; /* 상단 간격 추가 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+`;
+
 export const ButtonView = styled.div`
   display: flex;
   position: absolute;

@@ -4,6 +4,9 @@ pipeline {
     environment {
         GIT_URL = "https://github.com/dpcomm/cba_app_management.git"
     }
+    tools {
+        nodejs 'nodejs-18.16.0'
+    }
     stages {
         stage('Pull') {
             steps {

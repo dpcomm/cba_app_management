@@ -37,6 +37,19 @@ export interface Youtube {
   createdAt: string;
 }
 
+export interface ApplicationCheck {
+  id: number;
+  name: string;
+  group: string;
+  gender: string;
+  phone: string;
+  birth: string;
+  isLeader: boolean;
+  attended: boolean;
+  feePaid: boolean;
+  userId: string;
+  title: string;
+}
 export interface ApplicationStatusType {
   id: number;
   attended: boolean;

@@ -72,6 +72,13 @@ export const requestAuthCheck = (accessToken: string | null, refreshToken: strin
   });
 };
 
+export const requestOriginApplication = (userId?: string | null) => {
+  if (userId) {
+    return request.get(`/api/application/${userId}`);
+  }
+  return request.get(`/api/application/originManagement`);
+};
+
 export const requestApplication = (userId?: string | null) => {
   if (userId) {
     return request.get(`/api/application/${userId}`);
