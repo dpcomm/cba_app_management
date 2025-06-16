@@ -61,7 +61,7 @@ const Home = () => {
       } else if (bus?.[1] === 0) {
         if (ownCar) {
           arrival = '자차';
-        } else if (transfer === '대중교통') {
+        } else {
           arrival = '대중교통';
         }
       }
