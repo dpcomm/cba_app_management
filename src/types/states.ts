@@ -49,6 +49,10 @@ export interface ApplicationCheck {
   feePaid: boolean;
   userId: string;
   title: string;
+  meal: number[][];
+  transfer: string;
+  ownCar: string;
+  bus: number[];
 }
 export interface ApplicationStatusType {
   id: number;

@@ -18,7 +18,7 @@ const Home = () => {
       });
     }, []);
   useEffect(() => {
-      const filteredData = data.filter(application => application.title === 'Holyday');
+      const filteredData = data.filter(application => application.title === 'Kingdom of God');
       set_filteredData(filteredData);
     }, [data]);
 
@@ -27,7 +27,7 @@ const Home = () => {
       alert("No data to download");
       return;
     }
-    const formattedData = filteredData.map(({ name, group, gender, phone, birth, isLeader, attended, feePaid }) => {
+    const formattedData = filteredData.map(({ name, group, gender, phone, birth, isLeader, attended, feePaid,meal,transfer,ownCar,bus }) => {
       // 날짜 포맷팅 로직
       const formattedBirth = birth
         ? (() => {
@@ -39,6 +39,36 @@ const Home = () => {
           })()
         : '';
       const formattedGender = gender === 'male' ? '남자' : gender === 'female' ? '여자' : '기타';
+      
+      // 출발편 설정
+      let departure = '';
+      if (bus?.[0] === 1) {
+        departure = '본대대형버스';
+      } else if (bus?.[0] === 2) {
+        departure = '후발대대형버스';
+      } else if (bus?.[0] === 0) {
+        if (ownCar) {
+          departure = '자차';
+        } else if (transfer === '대중교통') {
+          departure = '대중교통';
+        }
+      }
+
+      // 도착편 설정
+      let arrival = '';
+      if (bus?.[1] === 1) {
+        arrival = '대형버스';
+      } else if (bus?.[1] === 0) {
+        if (ownCar) {
+          arrival = '자차';
+        } else if (transfer === '대중교통') {
+          arrival = '대중교통';
+        }
+      }
+
+      const mealDay1 = JSON.stringify(meal?.[0]) === JSON.stringify([1, 1, 1]);
+      const mealDay2 = JSON.stringify(meal?.[1]) === JSON.stringify([1, 1, 1]);
+      const mealDay3 = JSON.stringify(meal?.[2]) === JSON.stringify([1, 1, 1]);
 
       return {
         이름: name,
@@ -46,7 +76,13 @@ const Home = () => {
         성별: formattedGender,
         핸드폰: phone,
         생년월일: formattedBirth,
-        리딩자여부: isLeader,
+        출발편: departure,
+        도착편: arrival,
+        차량번호: ownCar,
+        '7/11 식사': mealDay1,
+        '7/12 식사': mealDay2,
+        '7/13 식사': mealDay3,
+        // 리딩자여부: isLeader,
         납부: feePaid,
         참석: attended,
       };
