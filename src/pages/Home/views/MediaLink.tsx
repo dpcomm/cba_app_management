@@ -65,7 +65,7 @@ const MediaLink = () => {
   });
 
   const handleCreateLink = () => {
-    requestCreateYoutube(retreatId, title, link)
+    requestCreateYoutube(parseInt(retreatId), title, link)
     .then(() => {
       alert("링크가 생성되었습니다.");
       set_isModal(!isModal);
