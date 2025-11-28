@@ -13,7 +13,7 @@ module.exports = merge(common, {
   output: {
     filename: 'js/[name].[contenthash].js',
     path: path.resolve(__dirname, '../dist'),
-    publicPath: './',
+    publicPath: '/management/',
     clean: true,
   },
   module: {
