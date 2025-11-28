@@ -28,7 +28,11 @@ const ApplicationState = () => {
 
   useEffect(() => {
     requestApplication().then((res) => {
-      set_data(res.data.application);
+      const payload = res?.data?.data ?? res?.data ?? res;
+      set_data(payload?.application ?? []);
+    }).catch((err) => {
+      console.error('requestApplication error', err);
+      set_data([]);
     });
   }, []);
 

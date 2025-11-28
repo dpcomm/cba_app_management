@@ -13,8 +13,12 @@ const Home = () => {
   
   useEffect(() => {
     requestOriginApplication().then((res) => {
-        console.log("Data:", res.data.application);
-        set_data(res.data.application);
+        const payload = res?.data?.data ?? res?.data ?? res;
+        console.log("Data:", payload?.application ?? payload?.application ?? undefined);
+        set_data(payload?.application ?? []);
+      }).catch((err) => {
+        console.error('requestOriginApplication error', err);
+        set_data([]);
       });
     }, []);
   useEffect(() => {

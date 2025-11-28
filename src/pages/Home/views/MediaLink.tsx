@@ -23,16 +23,20 @@ const MediaLink = () => {
 
   useEffect(() => {
     requestYoutube().then((res) => {
-      set_data(res.data.youtube);
-      console.log(res.data);
+      const payload = res?.data?.data ?? res?.data ?? res;
+      console.log(payload);
+      set_data(payload?.youtube ?? []);
+    }).catch((err) => {
+      console.error('requestYoutube error', err);
+      set_data([]);
     });
   }, []);
 
   useEffect(() => {
     const lowercasedSearch = search.toLowerCase();
     const filtered = data.filter(youtube =>
-      youtube.title.toLowerCase().includes(lowercasedSearch) ||
-      youtube.retreatId.includes(lowercasedSearch)
+      (youtube.title ?? '').toLowerCase().includes(lowercasedSearch) ||
+      String(youtube.retreatId ?? '').includes(lowercasedSearch)
     );
     set_filteredData(filtered);
   }, [search, data]);

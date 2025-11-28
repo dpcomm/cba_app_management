@@ -16,8 +16,13 @@ const AllUser = () => {
 
   useEffect(() => {
     requestUser().then((res) => {
-      set_data(res.data.user);
-      console.log(res.data);
+      console.log("asdfasdfs",res);
+      const payload = res?.data?.data ?? res?.data ?? res;
+      console.log(payload);
+      set_data(payload?.user ?? []);
+    }).catch((err) => {
+      console.error('requestUser error', err);
+      set_data([]);
     });
   }, []);
 

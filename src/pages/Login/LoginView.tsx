@@ -32,32 +32,39 @@ const LoginView = () => {
 		setIsLoading({ isLoading: true });
 		requestLogin(id, password, autoLogin)
 		.then(async (res) => {
-			if (res.data.user.rank === "M") {
+			const payload = res?.data?.data ?? res?.data ?? res;
+			if (!payload) {
+				setIsLoading({ isLoading: false });
+				return alert('로그인 응답이 올바르지 않습니다. 다시 시도해주세요.');
+			}
+			if (payload.user && payload.user.rank === "M") {
 				setIsLoading({ isLoading: false });
 				return alert("접근 권한이 없습니다. 관리자에게 문의하시기 바랍니다.");
 			}
+			const u = payload.user ?? {};
 			setUser({
-				id: res.data.user.id,
-				userId: res.data.user.userId,
-				rank: res.data.user.rank,
-				password: res.data.user.password,
-				name: res.data.user.name,
-				group: res.data.user.group,
-				phone: res.data.user.phone,
-				birth: res.data.user.birth,
-				gender: res.data.user.gender,
+				id: u.id ?? null,
+				userId: u.userId ?? "",
+				rank: u.rank ?? "M",
+				password: u.password ?? "",
+				name: u.name ?? "",
+				group: u.group ?? "",
+				phone: u.phone ?? "",
+				birth: u.birth ?? "",
+				gender: u.gender ?? "",
 			});
-			await localStorage.setItem('access_token', res.data.accessToken);
+			await localStorage.setItem('access_token', payload.accessToken ?? payload.data?.accessToken ?? '');
 			if (autoLogin) {
-				await localStorage.setItem('refresh_token', res.data.refreshToken);
+				await localStorage.setItem('refresh_token', payload.refreshToken ?? payload.data?.refreshToken ?? '');
 			}
 			handlePage('home');
 			alert("로그인에 성공하였습니다.");
 			setIsLoading({ isLoading: false });
 		}).catch((err) => {
 			setIsLoading({ isLoading: false });
-			if (err.response.data.message === "Unregisterd user") return alert("존재하지 않는 유저입니다.");
-			if (err.response.data.message === "Incorrect password") return alert("비밀번호가 일치하지 않습니다.");
+			const message = err?.response?.data?.message ?? err?.message ?? '';
+			if (message === "Unregisterd user") return alert("존재하지 않는 유저입니다.");
+			if (message === "Incorrect password") return alert("비밀번호가 일치하지 않습니다.");
 			return alert("잘못된 접근입니다.");
 		});
 	};

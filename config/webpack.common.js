@@ -3,7 +3,7 @@ const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 const path = require('path');
 const webpack = require('webpack');
 const dotenv = require('dotenv');
-const { GenerateSW } = require('workbox-webpack-plugin');
+
 
 dotenv.config();
 
@@ -64,10 +64,7 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env': JSON.stringify(process.env),
     }),
-    new GenerateSW({
-      include: [/\.html$/, /\.js$/],
-      maximumFileSizeToCacheInBytes: 15 * 1024 * 1024,
-    }),
+
   ],
   resolve: {
     alias: {

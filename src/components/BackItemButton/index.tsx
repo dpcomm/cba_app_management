@@ -10,7 +10,7 @@ type BackItemButtonProps = {
 
 const BackItemButton = ({ label, onClick, isClicked, children }: BackItemButtonProps) => {
 	return (
-		<Button clicked={isClicked} onClick={onClick}>
+		<Button $clicked={isClicked} onClick={onClick}>
 			{children}
 			{label}
 		</Button>
