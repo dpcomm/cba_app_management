@@ -26,6 +26,12 @@ export const HeaderText = styled.div`
   user-select: none;
 `;
 
+export const HeaderActions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
 export const StyledTable = styled.table`
   width: 100%;
   border-collapse: collapse;
@@ -66,8 +72,87 @@ export const StyledTbody = styled.tbody`
   }
 
   td {
-    padding: 12px 20px;
-    border-top: 1px solid #ddd;
+  padding: 12px 20px;
+  border-top: 1px solid #ddd;
+  }
+`;
+
+export const TableInput = styled.input`
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 14px;
+  color: ${EColor.TEXT_900};
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: ${EColor.COLOR_PRIMARY_SUB1};
+    box-shadow: 0 0 0 2px rgba(45, 128, 246, 0.2);
+    background-color: #f7fbff;
+  }
+`;
+
+export const BooleanCheckbox = styled.input.attrs({ type: 'checkbox' })`
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 2px solid ${EColor.COLOR_PRIMARY};
+  background-color: #fff;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:checked {
+    background-color: ${EColor.COLOR_PRIMARY};
+    border-color: ${EColor.COLOR_PRIMARY};
+  }
+
+  &:checked::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 6px;
+    width: 4px;
+    height: 8px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 1;
+    box-shadow: none;
+  }
+`;
+
+export const ToggleGroup = styled.div`
+  display: inline-flex;
+  gap: 6px;
+`;
+
+export const ToggleButton = styled.button<{ $active?: boolean }>`
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid ${props => (props.$active ? EColor.COLOR_PRIMARY : EColor.TEXT_500)};
+  background-color: ${props => (props.$active ? EColor.COLOR_PRIMARY_SUB2 : '#fff')};
+  color: ${props => (props.$active ? EColor.TEXT_900 : EColor.TEXT_700)};
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: ${EColor.COLOR_PRIMARY};
+    color: ${EColor.TEXT_900};
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.8;
   }
 `;
 

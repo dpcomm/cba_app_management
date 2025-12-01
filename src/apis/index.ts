@@ -109,11 +109,12 @@ export const requestUser = (userId?: string | null) => {
   return request.get(`/api/user`);
 };
 
-export const requestApplicationUpdate = (id: number, attended: boolean, feePaid: boolean) => {
+export const requestApplicationUpdate = (id: number, attended: boolean, feePaid: boolean, isLeader?: boolean) => {
   return request.post('/api/application/management', {
     id,
     attended,
-    feePaid
+    feePaid,
+    isLeader,
   });
 };
 

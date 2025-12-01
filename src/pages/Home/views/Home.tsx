@@ -22,7 +22,7 @@ const Home = () => {
       });
     }, []);
   useEffect(() => {
-      const filteredData = data.filter(application => application.title === 'Kingdom of God');
+      const filteredData = data.filter(application => application.title === 'Looking');
       set_filteredData(filteredData);
     }, [data]);
 
@@ -83,9 +83,9 @@ const Home = () => {
         출발편: departure,
         도착편: arrival,
         차량번호: ownCar,
-        '7/11 식사': mealDay1,
-        '7/12 식사': mealDay2,
-        '7/13 식사': mealDay3,
+        '1/30 식사': mealDay1,
+        '1/31 식사': mealDay2,
+        '2/01 식사': mealDay3,
         // 리딩자여부: isLeader,
         납부: feePaid,
         참석: attended,

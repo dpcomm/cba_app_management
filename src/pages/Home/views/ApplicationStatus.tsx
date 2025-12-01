@@ -1,133 +1,172 @@
 import BackTextInput from '@components/BackTextinput';
-import React, { useEffect, useState } from 'react';
-import { ButtonView, Container, EditPageContainer, EditPageHeader, EditPageItemView, EditPageLabel, EditPageValue, HeaderText, HeaderView, PageNumber, StyledButton, StyledSelect, StyledTable, StyledTbody, StyledThead } from './View.styled';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { BooleanCheckbox, ButtonView, Container, HeaderActions, HeaderText, HeaderView, PageNumber, StyledButton, StyledSelect, StyledTable, StyledTbody, StyledThead } from './View.styled';
 import { createColumnHelper, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
 import { requestApplication, requestApplicationUpdate } from '@apis/index';
-import { ApplicationStatusType,ApplicationCheck } from '@type/states';
-import { IconButton } from '@components/IconButton';
-import { EColor } from '@styles/color';
-import useConfirm from '@hooks/useConfirm';
+import { ApplicationCheck } from '@type/states';
 import { isLoadingState } from '@modules/atoms';
 import { useSetRecoilState } from 'recoil';
-import RadioButton from '@components/RadioButton';
 
 const ApplicationState = () => {
   const setIsLoading = useSetRecoilState(isLoadingState);
 
-  const [render, set_render] = useState(0);
   const [search, set_search] = useState("");
   const [data, set_data] = useState<ApplicationCheck[]>([]);
-  const [filteredData, set_filteredData] = useState<ApplicationCheck[]>([]);
-  const [editData, set_editData] = useState<ApplicationCheck | null>();
-  const [edit_attended, set_edit_attended] = useState();
-  const [edit_feePaid, set_edit_feePaid] = useState();
+  const [editableData, set_editableData] = useState<ApplicationCheck[]>([]);
+  const [isEditMode, set_isEditMode] = useState(false);
+  const [modifiedIds, set_modifiedIds] = useState<Set<number>>(new Set());
+  const [isSaving, set_isSaving] = useState(false);
   const [pagination, set_pagination] = useState({
     pageIndex: 0,
     pageSize: 10,
   });
 
   useEffect(() => {
-    requestApplication().then((res) => {
-      const payload = res?.data?.data ?? res?.data ?? res;
-      set_data(payload?.application ?? []);
-    }).catch((err) => {
-      console.error('requestApplication error', err);
-      set_data([]);
-    });
+    requestApplication()
+      .then((res) => {
+        const payload = res?.data?.data ?? res?.data ?? res;
+        const list = payload?.application ?? [];
+        set_data(list);
+        set_editableData(list.map((item) => ({ ...item })));
+      })
+      .catch((err) => {
+        console.error('requestApplication error', err);
+        set_data([]);
+        set_editableData([]);
+      });
   }, []);
 
-  useEffect(() => {
+  const filteredData = useMemo(() => {
+    const baseData = isEditMode ? editableData : data;
     const lowercasedSearch = search.toLowerCase();
-    const filtered = data.filter(application =>
-      application.name.toLowerCase().includes(lowercasedSearch) // `userId` 대신 `name`을 사용
+    return baseData.filter(application =>
+      (application.name || '').toLowerCase().includes(lowercasedSearch)
     );
-    set_filteredData(filtered);
-  }, [search, data]);
+  }, [search, data, editableData, isEditMode]);
 
-  const columnHelper = createColumnHelper();
-  const columns = [
+  const columnHelper = useMemo(() => createColumnHelper<ApplicationCheck>(), []);
+
+  const displayGender = useCallback((gender?: string | null) => {
+    if (!gender) return '';
+    const lower = gender.toLowerCase();
+    if (lower === 'female') return '여자';
+    if (lower === 'male') return '남자';
+    return gender;
+  }, []);
+
+  const handleCheckboxChange = useCallback((id: number, key: keyof ApplicationCheck) => {
+    set_editableData((prev) => {
+      const updated = prev.map((row) => row.id === id ? { ...row, [key]: !row[key] } : row);
+      const original = data.find((row) => row.id === id);
+      const edited = updated.find((row) => row.id === id);
+      set_modifiedIds((prevIds) => {
+        const next = new Set(prevIds);
+        if (original && edited) {
+          const hasDiff = ['isLeader', 'attended', 'feePaid'].some((field) => original[field] !== edited[field]);
+          if (hasDiff) {
+            next.add(id);
+          } else {
+            next.delete(id);
+          }
+        }
+        return next;
+      });
+      return updated;
+    });
+  }, [data]);
+
+  const renderBoolean = useCallback((row: ApplicationCheck, key: keyof ApplicationCheck) => {
+    const checked = Boolean(row[key]);
+    return (
+      <BooleanCheckbox
+        checked={checked}
+        disabled={!isEditMode}
+        onChange={() => isEditMode && handleCheckboxChange(row.id, key)}
+      />
+    );
+  }, [handleCheckboxChange, isEditMode]);
+
+  const columns = useMemo(() => ([
     columnHelper.accessor("id", { header: "ID" }),
+    columnHelper.accessor("title", { header: "수련회 제목" }),
     columnHelper.accessor("name", { header: "이름" }),
     columnHelper.accessor("group", { header: "소그룹" }),
-    columnHelper.accessor("gender", { header: "성별" }),
-    columnHelper.accessor("isLeader", { header: "리딩자" }),
-    // columnHelper.accessor("transfer", { header: "이동 수단" }),
-    // columnHelper.accessor("bus", {
-      //   header: "버스 탑승 정보",
-      //   cell: data => {
-        //     if (data.getValue()[0] === 0 && data.getValue()[1] === 1) return <div>본당→수련회장</div>;
-        //     if (data.getValue()[0] === 1 && data.getValue()[1] === 0) return <div>수련회장→본당</div>;
-    //     if (data.getValue()[0] === 1 && data.getValue()[1] === 1) return <div>왕복</div>;
-    //     return null;
-    //   }
-    // }),
-    // columnHelper.accessor("ownCar", { header: "차량번호" }),
-    columnHelper.accessor("title", { header: "수련회 제목" }),
+    columnHelper.accessor("gender", {
+      header: "성별",
+      cell: info => displayGender(info.getValue() as string)
+    }),
+    columnHelper.accessor("isLeader", {
+      header: "리딩자",
+      cell: info => renderBoolean(info.row.original, 'isLeader')
+    }),
     columnHelper.accessor("attended", {
       header: "현장 등록 여부",
-      cell: data => {
-        if (data.getValue() === false) return <div>미등록</div>;
-        return <div>등록 완료</div>;
-      }
+      cell: info => renderBoolean(info.row.original, 'attended')
     }),
     columnHelper.accessor("feePaid", {
       header: "회비 납부 여부",
-      cell: data => {
-        if (data.getValue() === false) return <div>미납</div>;
-        return <div>납부 완료</div>;
-      }
+      cell: info => renderBoolean(info.row.original, 'feePaid')
     }),
-  ];
-
+  ]), [columnHelper, renderBoolean]);
 
   const table = useReactTable({
     data: filteredData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getRowId: (row) => String(row.id),
     onPaginationChange: set_pagination,
     state: {
       pagination
     }
   });
 
-  const handleRenderingEditPage = (data) => {
-    set_editData(data);
-    set_render(1);
+  const handleToggleEditMode = () => {
+    if (isEditMode) {
+      set_editableData(data.map((item) => ({ ...item })));
+      set_modifiedIds(new Set());
+      set_isEditMode(false);
+      return;
+    }
+    set_editableData(data.map((item) => ({ ...item })));
+    set_isEditMode(true);
   };
 
-  const handleEditApplication = (isEdit: boolean) => {
-    if (isEdit) {
-      setIsLoading({ isLoading: true });
-      const confirmEditApplication = useConfirm("수련회 신청서를 수정하시겠습니까?", async () => {
-        requestApplicationUpdate(editData?.id, Boolean(edit_attended), Boolean(edit_feePaid)).then(() => {
-          alert("수련회 신청서 수정이 완료되었습니다.");
-          set_data(prevData =>
-            prevData.map(application =>
-              application.id === editData?.id
-                ? { ...application, attended: Boolean(edit_attended), feePaid: Boolean(edit_feePaid) }
-                : application
-            )
-          );
-          set_filteredData(prevFilteredData =>
-            prevFilteredData.map(application =>
-              application.id === editData?.id
-                ? { ...application, attended: Boolean(edit_attended), feePaid: Boolean(edit_feePaid) }
-                : application
-            )
-          );
-          set_render(0);
-          setIsLoading({ isLoading: false });
-        }).catch((err) => {
-          console.log(err);
-          alert("수련회 신청서 수정에 실패하였습니다..");
-          setIsLoading({ isLoading: false });
-        });
-      }, () => setIsLoading({ isLoading: true }));
-      confirmEditApplication();
-    } else {
-      set_editData(null);
-      set_render(0);
+  const handleApplyChanges = async () => {
+    const originalMap = new Map(data.map((item) => [item.id, item]));
+    const changes = editableData.filter((item) => {
+      const original = originalMap.get(item.id);
+      if (!original) return false;
+      return ['isLeader', 'attended', 'feePaid'].some((field) => original[field] !== item[field]);
+    });
+
+    if (!changes.length) {
+      alert("변경된 내용이 없습니다.");
+      set_isEditMode(false);
+      set_modifiedIds(new Set());
+      return;
+    }
+
+    if (!window.confirm("수정사항을 적용하시겠습니까?")) {
+      return;
+    }
+
+    set_isSaving(true);
+    setIsLoading({ isLoading: true });
+    try {
+      for (const item of changes) {
+        await requestApplicationUpdate(item.id, Boolean(item.attended), Boolean(item.feePaid), Boolean(item.isLeader));
+      }
+      alert("신청 정보가 업데이트되었습니다.");
+      set_data(editableData.map((item) => ({ ...item })));
+      set_isEditMode(false);
+      set_modifiedIds(new Set());
+    } catch (err) {
+      console.error('requestApplicationUpdate error', err);
+      alert("신청 정보를 수정하는 중 문제가 발생했습니다.");
+    } finally {
+      setIsLoading({ isLoading: false });
+      set_isSaving(false);
     }
   };
 
@@ -136,107 +175,59 @@ const ApplicationState = () => {
       <HeaderView>
         <HeaderText>수련회 등록 현황</HeaderText>
         <BackTextInput placeHolder={'Search...'} getter={search} setter={set_search} />
-        <HeaderText></HeaderText>
+        <HeaderActions>
+          {isEditMode ? (
+            <>
+              <StyledButton onClick={handleApplyChanges} disabled={isSaving}>완료</StyledButton>
+              <StyledButton onClick={handleToggleEditMode} disabled={isSaving}>취소</StyledButton>
+            </>
+          ) : (
+            <StyledButton onClick={handleToggleEditMode}>편집 모드</StyledButton>
+          )}
+        </HeaderActions>
       </HeaderView>
-      {render ?
-          <EditPageContainer>
-            <EditPageHeader>수련회 신청서 수정</EditPageHeader>
-            <EditPageItemView>
-              <EditPageLabel>이름</EditPageLabel>
-              <EditPageValue>{editData?.name}</EditPageValue>
-            </EditPageItemView>
-            <EditPageItemView>
-              <EditPageLabel>수련회 제목</EditPageLabel>
-              <EditPageValue>{editData?.title}</EditPageValue>
-            </EditPageItemView>
-            <EditPageItemView>
-              <EditPageLabel>납부 여부</EditPageLabel>
-              <div>
-                <RadioButton
-                  items={[
-                    { text: '미납', value: 0 },
-                    { text: '납부', value: 1 },
-                  ]}
-                  initialValue={editData?.feePaid ? 1 : 0}
-                  onChange={set_edit_feePaid}
-                />
-              </div>
-            </EditPageItemView>
-            <EditPageItemView>
-              <EditPageLabel>현장 등록 여부</EditPageLabel>
-              <div>
-                <RadioButton
-                  items={[
-                    { text: '미등록', value: 0 },
-                    { text: '등록 완료', value: 1 },
-                  ]}
-                  initialValue={editData?.attended ? 1 : 0}
-                  onChange={set_edit_attended}
-                />
-              </div>
-            </EditPageItemView>
-            <IconButton
-              label={"수정하기"}
-              onClick={() => handleEditApplication(true)}
-              backgroundColor={EColor.COLOR_PRIMARY_SUB1}
-              borderWidth='0'
-              color={EColor.TEXT_200}
-              width='100%'
-            />
-            <IconButton
-              label={"취소하기"}
-              onClick={() => handleEditApplication(false)}
-              backgroundColor={EColor.TEXT_400}
-              borderWidth='0'
-              color={EColor.TEXT_800}
-              width='100%'
-            />
-          </EditPageContainer> :
-        <>
-          <StyledTable>
-            <StyledThead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <th key={header.id}>
-                      {
-                        header.isPlaceholder
-                          ? null
-                        : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                    </th>
-                  ))}
-                </tr>
+      <StyledTable>
+        <StyledThead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th key={header.id}>
+                  {
+                    header.isPlaceholder
+                      ? null
+                    : flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
+                </th>
               ))}
-            </StyledThead>
-            <StyledTbody>
-              {table.getRowModel().rows.map((row) => (
-                <tr key={row.id} onClick={() => handleRenderingEditPage(row.original)}>
-                  {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </td>
-                  ))}
-                </tr>
+            </tr>
+          ))}
+        </StyledThead>
+        <StyledTbody>
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id} style={isEditMode && modifiedIds.has(row.original.id) ? { backgroundColor: '#fff8eb' } : undefined}>
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
               ))}
-            </StyledTbody>
-          </StyledTable>
-          <ButtonView>
-            <StyledButton onClick={() => table.firstPage()} disabled={!table.getCanPreviousPage()}>{'<<'}</StyledButton>
-              <StyledButton onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>{'<'}</StyledButton>
-              <PageNumber>{pagination.pageIndex}</PageNumber>
-              <StyledButton onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>{'>'}</StyledButton>
-              <StyledButton onClick={() => table.lastPage()} disabled={!table.getCanNextPage()}>{'>>'}</StyledButton>
-              <StyledSelect onChange={e => set_pagination({ ...pagination, pageSize: parseInt(e.target.value) })}>
-                {[10, 20].map(pageSize => (
-                  <option key={pageSize} value={pageSize}>{pageSize}</option>
-                ))}
-              </StyledSelect>
-          </ButtonView>
-        </>
-      }
+            </tr>
+          ))}
+        </StyledTbody>
+      </StyledTable>
+      <ButtonView>
+        <StyledButton onClick={() => table.firstPage()} disabled={!table.getCanPreviousPage()}>{'<<'}</StyledButton>
+          <StyledButton onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>{'<'}</StyledButton>
+          <PageNumber>{pagination.pageIndex}</PageNumber>
+          <StyledButton onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>{'>'}</StyledButton>
+          <StyledButton onClick={() => table.lastPage()} disabled={!table.getCanNextPage()}>{'>>'}</StyledButton>
+          <StyledSelect onChange={e => set_pagination({ ...pagination, pageSize: parseInt(e.target.value) })}>
+            {[10, 20].map(pageSize => (
+              <option key={pageSize} value={pageSize}>{pageSize}</option>
+            ))}
+          </StyledSelect>
+      </ButtonView>
     </Container>
   );
 };
