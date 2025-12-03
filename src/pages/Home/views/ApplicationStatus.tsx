@@ -115,6 +115,7 @@ const ApplicationState = () => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getRowId: (row) => String(row.id),
+    autoResetPageIndex: false,
     onPaginationChange: set_pagination,
     state: {
       pagination

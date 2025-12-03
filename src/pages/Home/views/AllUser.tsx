@@ -174,6 +174,7 @@ const AllUser = () => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getRowId: (row) => row.userId || String(row.id),
+    autoResetPageIndex: false,
     onPaginationChange: set_pagination,
     state: {
       pagination
